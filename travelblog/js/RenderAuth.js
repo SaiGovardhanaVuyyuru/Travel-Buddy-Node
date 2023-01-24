@@ -16,6 +16,9 @@ function AfterGettingUser(user){
             signOutButton.querySelector('span').style.color="white";
             signOutButton.classList.remove('d-none');
         }
+        let dropDownUser=document.body.querySelector('#signOut').querySelectorAll('a');
+        let signOut=dropDownUser[dropDownUser.length-1];
+        signOut.onclick=logout
 }
 
 function renderNavBar()
@@ -24,6 +27,8 @@ function renderNavBar()
     $.ajax({"method":'GET','url':'/api/user/',"success":(e)=>{AfterGettingUser(e)},
     error:(e)=>{ToastDisplay("Error couldn't fetch  users details","bg-danger");}
     });
+
+
 
 
 
@@ -44,6 +49,3 @@ function logout()
 
 }
 renderNavBar();
-let dropDownUser=document.body.querySelector('#signOut').querySelectorAll('a');
-let signOut=dropDownUser[dropDownUser.length-1];
-signOut.onclick=logout
