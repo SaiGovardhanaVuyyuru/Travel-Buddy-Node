@@ -1,4 +1,5 @@
-const { saveUser, getUser } = require("../../FilesStorageUtility/user");
+const { saveUser, getUser, authenticateUser } = require("../../FilesStorageUtility/user");
+
 /**
  * Endpoint Function for Editing User
  * @param {import("express").Request} req 
@@ -6,27 +7,41 @@ const { saveUser, getUser } = require("../../FilesStorageUtility/user");
  */
 function editUserEndpoint(req,res)
 {
-    let {email,password}=req.body;
-    
-    if(email==undefined||password==undefined)
+    let email=req.params.email;
+
+    //No cookie exit
+    if(req.cookies.userCredentials == undefined)
     {
-        res.json({'success':false,'toast-class':'bg-danger','message':"Missing Fields."});
+        res.json({"success":false,"message":"Not Authorized","toast-class":"bg-danger"});
+        return;
+    
+    }
+    
+    if(email==undefined)
+        email=JSON.parse(req.cookies.userCredentials)["email"];
+    //Cookie and param dont match
+    if(JSON.parse(req.cookies.userCredentials)["email"]!=email)
+        {
+            res.json({"success":false,"message":"Not Authorized","toast-class":"bg-danger"});
+            return ;
+        }
+
+    //Check if cookie correct
+    if(authenticateUser(JSON.parse(req.cookies.userCredentials)))
+    {   let existingUser=getUser(JSON.parse(req.cookies.userCredentials)["email"]);
+
+        for(let [k,v] of Object.entries(req.body))
+        {
+            existingUser[k]=v;
+        }
+        saveUser(existingUser);
+        res.json({"success":true,"message":"Succesfully Updated Profile","toast-class":"bg-success",data:getUser(email)});
+        return;
+    }
+    else
+    {   res.json({"success":false,"message":"Not Authorized","toast-class":"bg-danger"});
         return ;
     }
-    let user=getUser(email);
-    if(user==null)
-    {
-        res.json({'success':false,'toast-class':'bg-danger','message':"Couldn't Find the User"});
-        return;
-    }
-    if(user.password!=password)
-    {
-        res.json({'success':false,'toast-class':'bg-danger','message':"Invalid Password."});
-        return;
-    }
-    saveUser(req.body);
-    return res.json({'success':true,'toast-class':'bg-success','message':"Successfully made changes to user.","data":user});
-
 }
 
 exports.editUserEndpoint=editUserEndpoint;

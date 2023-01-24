@@ -16,11 +16,11 @@ function editClick()
 }
 document.querySelector('#edit').addEventListener('click',editClick);
 
-function autoFill()
+function autoFill(user)
 {
 
 
-        let user=JSON.parse(localStorage.getItem('currentUser'));
+        
         document.querySelector('.data-name').innerText=user.name;
         document.querySelector('#name').value=user.name;
         document.querySelector('#email').value=user.email;
@@ -49,8 +49,16 @@ function Save()
         }
     else
     {
-        editUser(newChanges);
-        ToastDisplay('Changes Updated!','bg-success');
+        $.ajax({"method":'PUT',contentType:'application/json','url':'/api/user/',data:JSON.stringify(newChanges),"success":(e)=>{
+
+            ToastDisplay(e["message"],e["toast-class"]);
+            setTimeout(()=>window.location.reload(),1000);
+        },
+        error:(e)=>{ToastDisplay("Error couldn't fetch  users details","bg-danger");}
+        });
+
+        
+        
     }
     }
     catch(E)
@@ -59,9 +67,11 @@ function Save()
         console.log(E);
     }
 
-    setTimeout(()=>window.location.reload(),1000);
+    
 
 
 }
 document.querySelector('#save').onclick=Save;
-autoFill();
+$.ajax({"method":'GET','url':'/api/user/',"success":(e)=>{autoFill(e.data);},
+error:(e)=>{ToastDisplay("Error couldn't fetch  users details","bg-danger");}
+});

@@ -1,3 +1,10 @@
+function processSignInRespone(data)
+{
+    ToastDisplay(data["message"],data["toast-class"]);
+    if(data["success"])
+        setTimeout(()=>window.location.replace('index.html'),1500);
+
+}
 function ValidateEmail(mail) 
 {
  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
@@ -22,20 +29,11 @@ function validate()
     {
         ToastDisplay("Please enter a valid email","bg-danger");
     }
-    let user=getUser(email);
     
-    if(user == null)
-    {   
-        ToastDisplay("Couldn't find user.","bg-danger");
-        return ;
-    }
-    if(!Login(email,password))
-        ToastDisplay("Incorrect Password Bro!!","bg-danger");
-    else
-    {  
-        ToastDisplay(`Welcome ${user.name} Bro!!`,"bg-success");
-        setTimeout(()=>window.location.replace('index.html'),1500);
-    }
+    $.ajax({"method":'POST',contentType:'application/json','data':JSON.stringify({"password":password,"email":email}),'url':'/api/user/authenticate',"success":(e)=>{processSignInRespone(e)},
+    error:(e)=>{ToastDisplay("Error while logging in user","bg-danger");}
+    });
+
 
 }
 let signInBtn=document.querySelector("#signIn");

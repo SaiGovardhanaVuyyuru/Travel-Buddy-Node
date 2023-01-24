@@ -23,7 +23,7 @@ function getUserEndpoint(req,res)
     //No cookie exit
     if(req.cookies.userCredentials == undefined)
     {
-        res.redirect('/index.html');
+        res.json({"success":false});
         return;
     
     }
@@ -33,7 +33,7 @@ function getUserEndpoint(req,res)
     //Cookie and param dont match
     if(JSON.parse(req.cookies.userCredentials)["email"]!=email)
         {
-            res.redirect('/index.html');
+            res.json({"success":false});
             return ;
         }
 
@@ -44,8 +44,8 @@ function getUserEndpoint(req,res)
         return;
     }
     else
-    {
-
+    {   res.json({"success":false});
+        return ;
     }
 
 }

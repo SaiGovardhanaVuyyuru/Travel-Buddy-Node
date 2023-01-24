@@ -1,22 +1,13 @@
-function getUserLoggedIn()
-{   let user=localStorage.getItem('currentUser');
-    if(user!=null)
-        return JSON.parse(user);
-    else
-        return null;
-}
-
-function renderNavBar()
-{
-    let user=getUserLoggedIn();
+function AfterGettingUser(user){
+    user=user.data;
     let signInButton=document.body.querySelector("#signIn");
     let signOutButton=document.body.querySelector("#signOut");
-
+    
     if(user!=null)
         {
             signInButton.classList.add('d-none');
             console.log(user.name);
-            if(user.email=='admin@admin.com')
+            if(user.role=='admin')
             {   
                 signOutButton.querySelector('ul').innerHTML='<li><a href="userpanel.html">Users Panel</a></li><li><a href="servicepanel.html">Service Panel</a></li>'+signOutButton.querySelector('ul').innerHTML;
             }
@@ -25,17 +16,32 @@ function renderNavBar()
             signOutButton.querySelector('span').style.color="white";
             signOutButton.classList.remove('d-none');
         }
+}
+
+function renderNavBar()
+{
+ 
+    $.ajax({"method":'GET','url':'/api/user/',"success":(e)=>{AfterGettingUser(e)},
+    error:(e)=>{ToastDisplay("Error couldn't fetch  users details","bg-danger");}
+    });
+
 
 
 
 }
 function logout()
 {   
-    ToastDisplay(`Bye ${JSON.parse(localStorage.getItem('currentUser')).name} :(`,'bg-success');
+    $.ajax({"method":'GET','url':'/api/userlogout',"success":(data)=>
+    {
+        ToastDisplay(data.message,data["toast-class"]);
+        if(data["success"])
+            {
+                setTimeout(()=>window.location.reload(),1500);
+            }
+    },
+    error:(e)=>{ToastDisplay("Error couldn't fetch  users details","bg-danger");}
+    });
 
-    localStorage.removeItem('currentUser');
-    
-    setTimeout(()=>window.location.reload(),1500);
 }
 renderNavBar();
 let dropDownUser=document.body.querySelector('#signOut').querySelectorAll('a');

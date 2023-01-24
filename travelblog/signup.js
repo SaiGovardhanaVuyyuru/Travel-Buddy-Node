@@ -1,3 +1,11 @@
+function processSignUpResponse(data)
+{
+    
+    ToastDisplay(data["message"],data["toast-class"])   
+    if(data["success"])
+        setTimeout(()=>window.location.replace('index.html'),1500);
+}
+
 function ValidateEmail(mail) 
 {
  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail))
@@ -39,34 +47,21 @@ function ValidateSignUp()
         return ;
     }
 
-    if(containsUser(email))
-    {
-        ToastDisplay("User already present with the given email","bg-danger");
-        return ;
-    }
-    else
-    {
+
         try
         {   
-            addUser(name,email,password);
-            Login(email,password);
-            ToastDisplay("User successfully signed up!!!","bg-success");
-            setTimeout(()=>window.location.replace('index.html'),1500);
+            $.ajax({"method":'POST',contentType:'application/json','data':JSON.stringify({"name":name,"password":password,"email":email}),'url':'/api/user/',"success":(e)=>{processSignUpResponse(e)},
+                    error:(e)=>{ToastDisplay("Error while signing up user","bg-danger");}
+                });
+            
+            
 
         }
         catch(E)
         {   ToastDisplay("Error while signing up user","bg-danger");
             console.log(E);
         }
-    }
-
-
-
-
-
-        
     
-        
 }
 
 let signOutBtn=document.querySelector('#signUp');

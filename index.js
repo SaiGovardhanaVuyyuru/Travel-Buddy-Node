@@ -4,6 +4,7 @@ const { getServicesEndPoint, getServiceEndPoint } = require('./endpoints/service
 const { authenticateUserEndpoint } = require('./endpoints/users/Authencation');
 const { editUserEndpoint } = require('./endpoints/users/EditUser');
 const { getAllUsersEndPoint, getUserEndPoint } = require('./endpoints/users/GetUsers');
+const { logoutEndPoint } = require('./endpoints/users/Logout');
 const { createUserEndPoint } = require('./endpoints/users/SignUp');
 const { initialize } = require('./FilesStorageUtility/initialize');
 const { addService,deleteService,getServices } = require('./FilesStorageUtility/service');
@@ -28,6 +29,6 @@ app.post('/api/user/authenticate',authenticateUserEndpoint);
 app.put('/api/user',editUserEndpoint);
 app.get('/api/users',getAllUsersEndPoint);
 app.get('/api/user/:email?',getUserEndPoint);
-app.get('/index.html',(req,res)=>res.json("wow"))
+app.get('/api/userlogout',logoutEndPoint);
 
 app.listen(4292);
