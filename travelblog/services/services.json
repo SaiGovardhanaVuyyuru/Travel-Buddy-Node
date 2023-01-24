@@ -1,0 +1,14 @@
+{
+    "Transport":
+    {
+        "card-description":"Reach your destinations with ease. Choose from various modes Of transport that satisfy your needs.",
+        "service-icon":"fa-plane"   
+    },
+    "Hotels":
+    {   
+        "card-description":"Choose from a variety of hotels for accomidations that best suits your requirements.",
+        "service-icon":"fa-hotel"
+    }
+
+
+}
