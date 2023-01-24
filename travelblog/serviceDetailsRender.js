@@ -1,4 +1,4 @@
-
+function serviceDetailsRender(services){
 let serviceContainer=document.querySelector("#service-container");
 function renderCard(serviceName,serviceDetailsImg,serviceDetailsTitle,serviceDetailsDescription)
 {   
@@ -38,7 +38,33 @@ return renderedString;
 
 }
 
-
-let services=JSON.parse(localStorage.getItem("services"));
 serviceContainer.innerHTML+= renderCards(services);
-let navContainer=document.querySelector('#service-details-nav-items').innerHTML=renderNav(services);
+document.querySelector('#service-details-nav-items').innerHTML=renderNav(services);
+
+function genericFocus(e)
+{
+    
+    document.querySelectorAll('.myservices').forEach(x=>x.classList.remove('active'));
+    e.target.classList.add('active');
+    document.querySelectorAll('.myservicesdiv').forEach(x=>{x.classList.add('d-none');x.classList.remove('myservicesdivactive');});
+    document.querySelector(`#${replaceSpaces(e.target.getAttribute('data-service-div'))}`).classList.remove('d-none');
+    setTimeout(()=>document.querySelector(`#${replaceSpaces(e.target.getAttribute('data-service-div'))}`).classList.add('myservicesdivactive'),100);
+}
+
+let navs=document.querySelector("#service-details-nav-items").querySelectorAll('a');
+navs.forEach(x=>x.addEventListener('click',genericFocus));
+console.log(navs);
+}
+
+$.ajax({'method':"GET","url":'/api/services',
+
+success:function(e)
+{
+  serviceDetailsRender(e.data);
+},
+error:function(e)
+{
+  ToastDisplay("Error While Loading services :(",'bg-danger');
+}
+
+});

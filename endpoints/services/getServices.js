@@ -7,13 +7,13 @@ const { getServices } = require("../../FilesStorageUtility/service");
  */
 function getServicesEndPoint(req,res)
 {
-    res.json(getServices());
+    res.json({success:'true',data:getServices()});
 
 }
 
 function getServiceEndPoint(req,res)
 {    
-    console.log("HERE");
+    
     let services=getServices();
     res.json(services[req.params["serviceName"]]);
 }

@@ -1,4 +1,5 @@
-let serviceContainer=document.querySelector("#service-container");
+function indexRender(services){
+
 function renderCard(serviceName,serviceIcon,serviceDescription)
 {
 
@@ -26,5 +27,19 @@ return renderedString;
 
 }
 
-let services=JSON.parse(localStorage.getItem("services"));
-serviceContainer.innerHTML= renderCards(services);
+let serviceContainer=document.querySelector("#service-container");
+serviceContainer.innerHTML= 
+renderCards(services);
+}
+$.ajax({'method':"GET","url":'/api/services',
+
+success:function(e)
+{
+  indexRender(e.data);
+},
+error:function(e)
+{
+  ToastDisplay("Error While Loading services :(",'bg-danger');
+}
+
+});
