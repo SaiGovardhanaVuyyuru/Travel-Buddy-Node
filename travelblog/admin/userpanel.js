@@ -1,3 +1,4 @@
+function renderUserPanel(usersd){
 function renderUserCard(user)
 {   if(user==null)
         console.log("ERROR");
@@ -21,14 +22,28 @@ function renderUserCard(user)
     );
 }
 
-function renderUsers()
+function renderUsers(users)
 {
-    let users=getUsers();
+    
     let rendered="";
-    for(let user of users)
-        rendered+=renderUserCard(user);
+    for(let [k,v] of Object.entries(users))
+        rendered+=renderUserCard(v);
     document.querySelector('#service-container').innerHTML=rendered;
 
 }
-$('.selector').iconpicker(".selector");
-renderUsers();
+renderUsers(usersd);
+}
+
+$.ajax({'method':"GET","url":'/api/users',
+
+success:function(e)
+{
+  renderUserPanel(e.data);
+},
+error:function(e)
+{
+  ToastDisplay("Error While Loading services :(",'bg-danger');
+}
+
+});
+

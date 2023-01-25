@@ -1,4 +1,5 @@
 const cookieParser = require('cookie-parser');
+const { deleteServicesEndpoint } = require('./endpoints/services/deleteServices');
 const { editServicesEndpoint } = require('./endpoints/services/editServices');
 const { getServicesEndPoint, getServiceEndPoint } = require('./endpoints/services/getServices');
 const { authenticateUserEndpoint } = require('./endpoints/users/Authencation');
@@ -7,7 +8,7 @@ const { getAllUsersEndPoint, getUserEndPoint } = require('./endpoints/users/GetU
 const { logoutEndPoint } = require('./endpoints/users/Logout');
 const { createUserEndPoint } = require('./endpoints/users/SignUp');
 const { initialize } = require('./FilesStorageUtility/initialize');
-const { addService,deleteService,getServices } = require('./FilesStorageUtility/service');
+
 
 
 let app=require('express')();
@@ -19,7 +20,8 @@ app.use(require('express').static('travelblog'))
 //Registering Service Endpoint
 app.get('/api/services/:serviceName',getServiceEndPoint);
 app.get('/api/services/',getServicesEndPoint);//Get all services
-app.post('/api/services',editServicesEndpoint);
+app.put('/api/services',editServicesEndpoint);
+app.delete('/api/services/:serviceName',deleteServicesEndpoint)
 
 
 

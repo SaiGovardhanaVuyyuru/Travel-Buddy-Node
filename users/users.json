@@ -1,1 +1,1 @@
-{"admin@admin.com":{"email":"admin@admin.com","name":"Admin","password":"1234","role":"admin"},"saigovardhan28@gmail.com":{"name":"Sai","password":"12345","email":"saigovardhan28@gmail.com","role":"customer"}}
+{"admin@admin.com":{"email":"admin@admin.com","name":"Admin","password":"1234","role":"admin"},"saigovardhan28@gmail.com":{"name":"Sai Govardhan","password":"12345","email":"saigovardhan28@gmail.com","role":"customer","dob":"2022-12-29","address":"Hyderbad"}}

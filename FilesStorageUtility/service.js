@@ -8,14 +8,14 @@ function addService(service)
     return true;
 }
 
-function deleteService(service)
+function deleteService(serviceName)
 {
     let services=JSON.parse(fs.readFileSync('./services/services.json'));
-    if(service["service-name"] in services )
+    if(serviceName in services )
         {
             let newServices={}
             for(let [key,value] of Object.entries(services))
-                if(key!=service["service-name"])
+                if(key!=serviceName)
                     newServices[key]=value;
             
             fs.writeFileSync('./services/services.json',JSON.stringify(newServices));        

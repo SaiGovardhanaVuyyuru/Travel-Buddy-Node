@@ -1,3 +1,5 @@
+function servicePanelProcess(services){
+
 function getAllDetails()
 {
     let vals=document.querySelectorAll('input');
@@ -9,12 +11,26 @@ function getAllDetails()
 }
 
 function saveService(service)
-{   let services={}
-    if(localStorage.getItem('services')!=null)
-        services=JSON.parse(localStorage.getItem('services'));
-    services[service['service-name']]=service;
-    ToastDisplay('Saving Service','bg-success');
-    localStorage.setItem('services',JSON.stringify(services));
+{   
+
+        $.ajax({'method':"PUT","url":'/api/services/',data:JSON.stringify(service),
+            contentType:"application/json"
+            ,
+
+            success:function(e)
+            {
+                ToastDisplay(e.message,e["toast-class"]);
+            },
+            error:function(e)
+            {   console.log(e);
+            ToastDisplay("Error While Saving service :(",'bg-danger');
+            }
+
+            }); 
+
+
+    
+    
 }
 
 
@@ -22,27 +38,31 @@ function saveService(service)
 
 function deleteService(service)
 {
-    let services={};
-    if(localStorage.getItem('services')!=null)
-        services=JSON.parse(localStorage.getItem('services'));
-    
-    if(service["service-name"]  in services)
-    {
-        ToastDisplay('Found Service and Deleted','bg-success');
-        let newServices={};
-        for(let [k,v] of Object.entries(services))
-            if(k!=service['service-name'])
-                newServices[k]=v;
-        localStorage.setItem('services',JSON.stringify(newServices));
-    }
-    else
-        ToastDisplay('Could Not Find Service To Delete','bg-danger');
+console.log("HERE");
+if(service["service-name"].length==0 || service["service-name"] == undefined)
+{   
+    ToastDisplay("Please enter a service name:(",'bg-danger');
+    return;
 
 }
+    $.ajax({'method':"DELETE",'url':`/api/services/${service["service-name"]}`,
+
+    success:function(e)
+    {
+  ToastDisplay(e["message"],e["toast-class"])
+    },
+    error:function(e)
+    {
+    ToastDisplay("Error Deleting services ::(",'bg-danger');
+    }
+
+});
+
+
+}
+
 function listenServicName(e)
-{   let services={};
-    if(localStorage.getItem('services')!=null)
-        services=JSON.parse(localStorage.getItem('services'));
+{   
 
     let serviceName=e.target.value;
     if(serviceName in services)
@@ -60,3 +80,17 @@ document.querySelector('#service-name').addEventListener('keyup',listenServicNam
 document.querySelector('.submit').addEventListener('click',()=>{let obj=getAllDetails();saveService(obj)});
 
 document.querySelector('.delete').addEventListener('click',()=>{let obj=getAllDetails();deleteService(obj)});
+}
+
+$.ajax({'method':"GET","url":'/api/services',
+
+success:function(e)
+{
+  servicePanelProcess(e.data);
+},
+error:function(e)
+{
+  ToastDisplay("Error While Loading services :(",'bg-danger');
+}
+
+});
